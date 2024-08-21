@@ -13,7 +13,11 @@ public static class ErrorMessages
             ErrorCodes.InternalServerError => "Um erro ocorreu ao executar a operação.",
             ErrorCodes.BadRequestIfNull => "Parâmetro não pode ser vazio.",
             ErrorCodes.BadRequest => "Conteúdo da solicitação incorreto.",
-            ErrorCodes.InvalidRequest => "Solicitação inválida"
+            ErrorCodes.InvalidRequest => "Solicitação inválida",
+            ErrorCodes.Unauthorized => "Operação não permitida",
+            ErrorCodes.Forbidden => "Problema",
+            ErrorCodes.Conflict => "Operação não permitida",
+            _ => throw new ArgumentOutOfRangeException(nameof(error), error, null)
         };
     }
 }

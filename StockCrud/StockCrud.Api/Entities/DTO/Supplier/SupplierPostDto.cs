@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace StockCrud.Api.Entities;
 
-public class Supplier : General
+public class SupplierPostDto : General
 {
     public string Fantasia { get; set; } = null!;
     public string RazaoSocial { get; set; } = null!;
@@ -13,13 +12,4 @@ public class Supplier : General
     [MaxLength(2)] [MinLength(2)] public string Uf { get; set; } = string.Empty;
     public long Telephone { get; set; }
     public string Email { get; set; } = string.Empty;
-
-    [JsonIgnore]
-    public ICollection<Product> Products { get; set; } = new List<Product>();
-
-    public Supplier() : base()
-    {
-        
-    }
-
 }

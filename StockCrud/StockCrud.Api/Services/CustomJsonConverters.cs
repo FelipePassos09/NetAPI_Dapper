@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Newtonsoft.Json;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 
 namespace StockCrud.Api.Services;
 
@@ -16,7 +17,7 @@ public static class CustomJsonConverters
             writer.WriteValue(value.ToString(_format));
         }
 
-        public override DateOnly ReadJson(JsonReader reader, Type objectType, DateOnly existingValue, bool hasExistingValue,
+        public override DateOnly ReadJson(JsonReader? reader, Type objectType, DateOnly existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
             return DateOnly.ParseExact((string)reader.Value, _format);

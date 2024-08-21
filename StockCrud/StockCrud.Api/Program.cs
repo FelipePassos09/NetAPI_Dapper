@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using StockCrud.Api.Data;
 using Microsoft.Extensions.DependencyInjection;
+using StockCrud.Api.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 builder.Services.AddSingleton<DapperContext>();
+
+// Adding Mapper
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>

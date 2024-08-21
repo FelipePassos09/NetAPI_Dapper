@@ -110,8 +110,8 @@ namespace StockCrud.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<int>("Telephone")
-                        .HasColumnType("integer")
+                    b.Property<long>("Telephone")
+                        .HasColumnType("bigint")
                         .HasColumnName("telephone");
 
                     b.Property<string>("Uf")
@@ -130,6 +130,52 @@ namespace StockCrud.Api.Migrations
                     b.ToTable("customers");
                 });
 
+            modelBuilder.Entity("StockCrud.Api.Entities.Order", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Annotation")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("annotation");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createddate");
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("customerid");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("productid");
+
+                    b.Property<int>("Units")
+                        .HasColumnType("integer")
+                        .HasColumnName("units");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updateddate");
+
+                    b.HasKey("Id")
+                        .HasName("pk_orders");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_orders_customerid");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_orders_productid");
+
+                    b.ToTable("orders");
+                });
+
             modelBuilder.Entity("StockCrud.Api.Entities.Product", b =>
                 {
                     b.Property<long>("Id")
@@ -142,6 +188,10 @@ namespace StockCrud.Api.Migrations
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint")
                         .HasColumnName("categoryid");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("numeric")
+                        .HasColumnName("cost");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone")
@@ -164,6 +214,10 @@ namespace StockCrud.Api.Migrations
                     b.Property<long>("SupplierId")
                         .HasColumnType("bigint")
                         .HasColumnName("supplierid");
+
+                    b.Property<int>("Units")
+                        .HasColumnType("integer")
+                        .HasColumnName("units");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone")
@@ -244,9 +298,26 @@ namespace StockCrud.Api.Migrations
                     b.ToTable("suppliers");
                 });
 
+            modelBuilder.Entity("StockCrud.Api.Entities.Order", b =>
+                {
+                    b.HasOne("StockCrud.Api.Entities.Customer", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_customers_customerid");
+
+                    b.HasOne("StockCrud.Api.Entities.Product", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_products_productid");
+                });
+
             modelBuilder.Entity("StockCrud.Api.Entities.Product", b =>
                 {
-                    b.HasOne("StockCrud.Api.Entities.Category", "Category")
+                    b.HasOne("StockCrud.Api.Entities.Category", null)
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -259,13 +330,21 @@ namespace StockCrud.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_products_suppliers_supplierid");
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("StockCrud.Api.Entities.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("StockCrud.Api.Entities.Customer", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("StockCrud.Api.Entities.Product", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("StockCrud.Api.Entities.Supplier", b =>
