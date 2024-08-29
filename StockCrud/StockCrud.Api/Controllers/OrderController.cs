@@ -6,6 +6,7 @@ using StockCrud.Api.Data;
 using StockCrud.Api.Entities;
 using StockCrud.Api.Services;
 using StockCrud.Api.Services.Enums;
+using StockCrud.Api.Services.Product;
 
 namespace StockCrud.Api.Controllers;
 
@@ -15,12 +16,14 @@ public class OrderController : Controller
     private readonly DapperContext _dapperContext;
     private readonly AppDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly IProductService _productService;
 
-    public OrderController(AppDbContext dbContext, DapperContext dapperContext, IMapper mapper)
+    public OrderController(AppDbContext dbContext, DapperContext dapperContext, IMapper mapper, IProductService productService)
     {
         _dbContext = dbContext;
         _dapperContext = dapperContext;
         _mapper = mapper;
+        _productService = productService;
     }
 
     [HttpGet]
@@ -84,6 +87,17 @@ public class OrderController : Controller
 
         try
         {
+            try
+            {
+                await _productService.RemoveProductQuantityAsync(order.ProductId, order.Units);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return Problem(ErrorMessages.GetMessage(ErrorCodes.BadRequestOutStock));
+            }
+            
+            
             var orderDto = _mapper.Map<Order>(order);
             await _dbContext.Orders.AddAsync(orderDto);
             _dbContext.SaveChanges();

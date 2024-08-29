@@ -13,6 +13,7 @@ public static class ErrorMessages
             ErrorCodes.InternalServerError => "Um erro ocorreu ao executar a operação.",
             ErrorCodes.BadRequestIfNull => "Parâmetro não pode ser vazio.",
             ErrorCodes.BadRequest => "Conteúdo da solicitação incorreto.",
+            ErrorCodes.BadRequestOutStock => "Quantidade em estoque insuficiente.",
             ErrorCodes.InvalidRequest => "Solicitação inválida",
             ErrorCodes.Unauthorized => "Operação não permitida",
             ErrorCodes.Forbidden => "Problema",

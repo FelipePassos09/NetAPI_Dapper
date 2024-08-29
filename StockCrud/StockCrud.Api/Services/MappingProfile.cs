@@ -12,13 +12,14 @@ public class MappingProfile : Profile
         CreateMap<Order, OrderGetDto>()
             .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product))
             .ForMember(dest => dest.Customer, opt => opt.MapFrom(src => src.Customer));
-
         
-        CreateMap<Customer, CustomerGetDto>();
-        CreateMap<CustomerPostDto, Customer>();
         
-        CreateMap<Product, ProductGetDto>();
-        CreateMap<ProductPostDto, Product>();
+        CreateMap<Entities.Customer, CustomerGetDto>();
+        CreateMap<Entities.Customer, CustomerSearchDto>();
+        CreateMap<CustomerPostDto, Entities.Customer>();
+        
+        CreateMap<Entities.Product, ProductGetDto>();
+        CreateMap<ProductPostDto, Entities.Product>();
         
         CreateMap<Category, CategoryGetDto>();
         CreateMap<CategoryPostDto, Category>();

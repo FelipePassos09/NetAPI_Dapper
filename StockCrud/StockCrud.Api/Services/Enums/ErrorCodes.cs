@@ -9,5 +9,6 @@ public enum ErrorCodes
     Forbidden,
     BadRequestIfNull,
     BadRequest,
+    BadRequestOutStock,
     Conflict
 }

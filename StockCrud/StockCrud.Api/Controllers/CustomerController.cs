@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using StockCrud.Api.Data;
 using StockCrud.Api.Entities;
 using StockCrud.Api.Services;
+using StockCrud.Api.Services.Customer;
 using StockCrud.Api.Services.Enums;
+using StockCrud.Api.Utils.EndpointUtils.SearchParameters;
 
 namespace StockCrud.Api.Controllers;
 
@@ -14,11 +16,13 @@ public class CustomerController : Controller
 {
     private readonly AppDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly ICustomerService _customerService;
 
-    public CustomerController(AppDbContext context, IMapper mapper)
+    public CustomerController(AppDbContext context, IMapper mapper, ICustomerService customerService)
     {
         _dbContext = context;
         _mapper = mapper;
+        _customerService = customerService;
     }
 
     [HttpGet]
@@ -156,5 +160,19 @@ public class CustomerController : Controller
             Console.WriteLine(e);
             return Problem(ErrorMessages.GetMessage(ErrorCodes.InternalServerError));
         }
+    }
+
+    [HttpPost("search")]
+    [ActionName("GetCustomersFiltered")]
+    public async Task<ActionResult<CustomerGetDto>> GetCustomersFiltered(
+        [FromQuery] CustomerSearchParameters searchParameters)
+    {
+        if(!ModelState.IsValid) return BadRequest(ErrorMessages.GetMessage(ErrorCodes.BadRequest));
+        
+        var customers = await _customerService.SearchCustomer(searchParameters);
+        
+        var customersDto = _mapper.Map<IEnumerable<CustomerGetDto>>(customers);
+        
+        return Ok(customersDto);
     }
 }
